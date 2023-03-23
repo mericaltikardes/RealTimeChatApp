@@ -37,6 +37,13 @@ function sendName() {
 }
 function sendRoomName(){
     stompClient.send("/app/join", {}, JSON.stringify({'roomName': $("#roomName").val()}));
+    var redirectUrl = "/" + $("#roomName").val() + "/";
+
+    window.location.href = redirectUrl;
+
+}
+function redirect(){
+
 
 }
 function showGreeting(message) {

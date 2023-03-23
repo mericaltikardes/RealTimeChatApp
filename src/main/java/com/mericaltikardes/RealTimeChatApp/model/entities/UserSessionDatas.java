@@ -2,7 +2,6 @@ package com.mericaltikardes.RealTimeChatApp.model.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import org.springframework.context.annotation.Bean;
 
 import java.util.UUID;
 

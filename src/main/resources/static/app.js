@@ -1,5 +1,6 @@
 var stompClient = null;
 
+var chatPage=document.querySelector('#chat-page');
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
@@ -37,15 +38,8 @@ function sendName() {
 }
 function sendRoomName(){
     stompClient.send("/app/join", {}, JSON.stringify({'roomName': $("#roomName").val()}));
-    var redirectUrl = "/" + $("#roomName").val() + "/";
-
-    window.location.href = redirectUrl;
-
 }
-function redirect(){
 
-
-}
 function showGreeting(message) {
     $("#greetings").append("<tr><td>" + message + "</td></tr>");
 }
@@ -56,5 +50,23 @@ $(function () {
     });
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName();sendRoomName() });
+    $( "#send" ).click(function() { sendName();sendRoomName()});
+    $(function () {
+        // ...
+
+        // send button click event
+        $("#send").click(function (event) {
+            event.preventDefault();
+            var name = $("#name").val();
+            var roomName = $("#roomName").val();
+            if (name && roomName) {
+                connect(name, roomName);
+                $("#main-content").addClass("hidden");
+                $("#chat-page").removeClass("hidden");
+            } else {
+                alert("Please enter your name and room name.");
+            }
+        });
+    });
+
 });

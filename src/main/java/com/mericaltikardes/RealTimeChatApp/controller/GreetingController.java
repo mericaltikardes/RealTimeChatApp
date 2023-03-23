@@ -1,6 +1,5 @@
 package com.mericaltikardes.RealTimeChatApp.controller;
 
-import com.mericaltikardes.RealTimeChatApp.model.Greeting;
 import com.mericaltikardes.RealTimeChatApp.model.HelloMessage;
 import com.mericaltikardes.RealTimeChatApp.model.JoinMessage;
 import com.mericaltikardes.RealTimeChatApp.model.entities.UserSessionDatas;
@@ -8,7 +7,7 @@ import com.mericaltikardes.RealTimeChatApp.service.UserService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.util.HtmlUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class GreetingController {
@@ -26,7 +25,7 @@ public class GreetingController {
     public void greeting(HelloMessage message) throws Exception {
         name=message.getName();
     }
-
+//Burddan mapping mi yapmak stomptan mı yollamak daha amnatıklı pek emin değilim
     @MessageMapping("/join")
     @SendTo("/topic/greetings")
     public void joinRoom(JoinMessage roomMessage) {

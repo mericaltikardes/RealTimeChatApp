@@ -1,6 +1,7 @@
 package com.mericaltikardes.RealTimeChatApp.config;
 
 
+import com.mericaltikardes.RealTimeChatApp.repository.UserRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -11,7 +12,11 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    UserRepository repository;
 
+    public WebSocketConfig(UserRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {

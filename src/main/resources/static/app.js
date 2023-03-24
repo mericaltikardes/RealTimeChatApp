@@ -1,6 +1,8 @@
 var stompClient = null;
 
-var chatPage=document.querySelector('#chat-page');
+var username = null;
+var roomName = null;
+
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
@@ -34,10 +36,14 @@ function disconnect() {
 }
 
 function sendName() {
+    username=$("#name").val();
     stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
+    Cookies.set('username',username);
 }
 function sendRoomName(){
-    stompClient.send("/app/join", {}, JSON.stringify({'roomName': $("#roomName").val()}));
+    roomName=$("#roomName").val();
+    stompClient.send("/app/join", {}, JSON.stringify({'roomName':  $("#roomName").val()}));
+    Cookies.set("roomName",roomName)
 }
 
 function showGreeting(message) {
@@ -55,10 +61,12 @@ $(function () {
         // ...
 
         // send button click event
+
         $("#send").click(function (event) {
+            document.querySelector('#room-id-display').textContent=Cookies.get('roomName');
             event.preventDefault();
-            var name = $("#name").val();
-            var roomName = $("#roomName").val();
+            var name =Cookies.get('username');
+            var roomName = Cookies.get('roomName');
             if (name && roomName) {
                 connect(name, roomName);
                 $("#main-content").addClass("hidden");

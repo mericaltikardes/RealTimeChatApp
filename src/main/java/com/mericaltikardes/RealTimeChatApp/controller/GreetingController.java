@@ -2,22 +2,29 @@ package com.mericaltikardes.RealTimeChatApp.controller;
 
 import com.mericaltikardes.RealTimeChatApp.model.HelloMessage;
 import com.mericaltikardes.RealTimeChatApp.model.JoinMessage;
+import com.mericaltikardes.RealTimeChatApp.model.entities.RoomsMessages;
 import com.mericaltikardes.RealTimeChatApp.model.entities.UserSessionDatas;
+import com.mericaltikardes.RealTimeChatApp.service.MessageServices;
 import com.mericaltikardes.RealTimeChatApp.service.UserService;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Map;
 
 @Controller
 public class GreetingController {
 
     UserService userService;
 
+    MessageServices messageServices;
     String name = "";
-
-    public GreetingController(UserService userService) {
+    String roomName="";
+    public GreetingController(UserService userService,MessageServices messageServices) {
         this.userService = userService;
+        this.messageServices=messageServices;
     }
 
     @MessageMapping("/hello")
@@ -29,10 +36,19 @@ public class GreetingController {
     @MessageMapping("/join")
     @SendTo("/topic/greetings")
     public void joinRoom(JoinMessage roomMessage) {
-        String roomName = roomMessage.getRoomName();
+         roomName = roomMessage.getRoomName();
         if(!name.equals("")){
             userService.saveUser(new UserSessionDatas(name,roomName));
         }
     }
+
+    @MessageMapping("/join/{roomName}")
+    @SendTo("/topic/greetings/{roomName}")
+    public void subscribeRoom(@Payload Map<String,String> message, @DestinationVariable String roomName) {
+        System.out.println("Received message: " + message.get("message") + " from room: " + roomName+" by:"+message.get("name"));
+        RoomsMessages messages=new RoomsMessages(message.get("name"),roomName,message.get("message"));
+        messageServices.saveMessages(messages);
+    }
+
 
 }

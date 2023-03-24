@@ -21,11 +21,10 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/greetings', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
-        });
+
     });
 }
+
 
 function disconnect() {
     if (stompClient !== null) {
@@ -37,13 +36,23 @@ function disconnect() {
 
 function sendName() {
     username=$("#name").val();
-    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
+    stompClient.send("/app/hello", {}, JSON.stringify({'name': username}));
     Cookies.set('username',username);
 }
 function sendRoomName(){
     roomName=$("#roomName").val();
-    stompClient.send("/app/join", {}, JSON.stringify({'roomName':  $("#roomName").val()}));
+    stompClient.send("/app/join", {}, JSON.stringify({'roomName':  roomName}));
     Cookies.set("roomName",roomName)
+}
+function subscribeToRoom(){
+    stompClient.subscribe('/topic/greetings/' + roomName, function(message) {
+
+    });
+    let message = $("#message").val();
+    let sendPath = '/app/join/' + roomName;
+    stompClient.send(sendPath, {}, JSON.stringify({'message': message,'name':username}));
+   // stompClient.send(sendPath, {}, JSON.stringify({'name': username}));
+
 }
 
 function showGreeting(message) {
@@ -54,19 +63,15 @@ $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
-    $( "#connect" ).click(function() { connect(); });
+    $( "#connect" ).click(function() { connect();});
     $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName();sendRoomName()});
+    $( "#send" ).click(function() { sendName();sendRoomName();});
     $(function () {
-        // ...
-
-        // send button click event
-
         $("#send").click(function (event) {
-            document.querySelector('#room-id-display').textContent=Cookies.get('roomName');
+            document.querySelector('#room-id-show').textContent=Cookies.get('roomName');
             event.preventDefault();
-            var name =Cookies.get('username');
-            var roomName = Cookies.get('roomName');
+            let name = Cookies.get('username');
+            let roomName = Cookies.get('roomName');
             if (name && roomName) {
                 connect(name, roomName);
                 $("#main-content").addClass("hidden");
@@ -76,5 +81,6 @@ $(function () {
             }
         });
     });
+    $( "#sendMessage" ).click(function() {subscribeToRoom()});
 
 });

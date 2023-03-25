@@ -1,8 +1,6 @@
 var stompClient = null;
-
 var username = null;
 var roomName = null;
-
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
@@ -12,7 +10,7 @@ function setConnected(connected) {
     else {
         $("#conversation").hide();
     }
-    $("#greetings").html("");
+    $("#newMessages").html("");
 }
 
 function connect() {
@@ -45,19 +43,20 @@ function sendRoomName(){
     Cookies.set("roomName",roomName)
 }
 function subscribeToRoom(){
-    stompClient.subscribe('/topic/greetings/' + roomName, function(message) {
-
+    stompClient.subscribe('/topic/greetings/' + roomName ,function(message) {
     });
     let message = $("#message").val();
     let sendPath = '/app/join/' + roomName;
+
     stompClient.send(sendPath, {}, JSON.stringify({'message': message,'name':username}));
-   // stompClient.send(sendPath, {}, JSON.stringify({'name': username}));
+
 
 }
 
 function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+    $("#Greeting").append("<tr><td>" + message + "</td></tr>");
 }
+
 
 $(function () {
     $("form").on('submit', function (e) {

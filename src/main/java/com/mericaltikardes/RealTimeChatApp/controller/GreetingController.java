@@ -10,8 +10,11 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -44,10 +47,12 @@ public class GreetingController {
 
     @MessageMapping("/join/{roomName}")
     @SendTo("/topic/greetings/{roomName}")
-    public void subscribeRoom(@Payload Map<String,String> message, @DestinationVariable String roomName) {
+    public void subscribeRoom(@Payload Map<String,String> message, @DestinationVariable String roomName, SimpMessageHeaderAccessor headerAccessor) throws Exception {
         System.out.println("Received message: " + message.get("message") + " from room: " + roomName+" by:"+message.get("name"));
         RoomsMessages messages=new RoomsMessages(message.get("name"),roomName,message.get("message"));
         messageServices.saveMessages(messages);
+        List<RoomsMessages> getRoomMessages=messageServices.getMessagesByRoom(roomName);
+
     }
 
 

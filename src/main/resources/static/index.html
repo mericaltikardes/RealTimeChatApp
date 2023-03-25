@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <title>Hello WebSocket</title>
   <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -39,30 +39,17 @@
       </form>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12">
-      <table id="conversation" class="table table-striped">
-        <thead>
-        <tr>
-          <th>Greetings</th>
-        </tr>
-        </thead>
-        <tbody id="greetings">
-        </tbody>
-      </table>
-    </div>
-  </div>
 </div>
 <div id="chat-page" class="hidden">
-    <div class="chat-header">
-      <h2>ChatRoom [<span id="room-id-show"></span>]</h2>
+  <div class="chat-header">
+    <h2>ChatRoom [<span id="room-id-show"></span>]</h2>
+  </div>
+  <form id="messageForm" name="messageForm">
+    <div class="input-group ">
+      <input type="text" id="message" class="form-control"/>
+      <button id="sendMessage" type="submit">Send</button>
     </div>
-    <form id="messageForm" name="messageForm">
-        <div class="input-group ">
-          <input type="text" id="message" class="form-control"/>
-          <button id="sendMessage" type="submit" >Send</button>
-        </div>
-    </form>
+  </form>
 </div>
 </body>
 </html>

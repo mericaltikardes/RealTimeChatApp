@@ -73,8 +73,8 @@ $(function () {
             let roomName = Cookies.get('roomName');
             if (name && roomName) {
                 connect(name, roomName);
-                $("#main-content").addClass("hidden");
-                $("#chat-page").removeClass("hidden");
+                $("#main-content").classList.add('hidden');
+                $("#chat-page").classList.remove('hidden');
             } else {
                 alert("Please enter your name and room name.");
             }
